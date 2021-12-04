@@ -9,6 +9,7 @@ namespace UKOneHit
     public class Plugin : BaseUnityPlugin
     {
         private NewMovement player = null;
+        private bool enableOneHit = true;
 
         private void Awake()
         {
@@ -29,7 +30,7 @@ namespace UKOneHit
             {
                 player = FindObjectOfType<NewMovement>();
                 Debug.Log($"Found player! name:{player.gameObject.name}");
-                Invoke("ModifyHP", 0.01f);
+                Invoke("ModifyHP", 0.1f);
             }
         }
 
@@ -37,20 +38,25 @@ namespace UKOneHit
         {
             if (player != null)
             {
-                if (player.dead && Input.GetKeyDown(KeyCode.R))
+                if (player.dead && enableOneHit && Input.GetKeyDown(KeyCode.R))
                 {
                     SceneManager.LoadScene(SceneManager.GetActiveScene().name);
                 }
+            }
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                enableOneHit = !enableOneHit;
+                Invoke("ModifyHP", 0.1f);
             }
         }
 
         private void ModifyHP()
         {
-            if (player != null)
+            if (player != null && enableOneHit)
             {
                 player.antiHp = 99;
                 player.hp = 1;
-                Invoke("ModifyHP", 0.01f);
+                Invoke("ModifyHP", 0.1f);
             }
         }
     }
